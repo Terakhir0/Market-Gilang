@@ -109,13 +109,12 @@ require_once 'header.php';
                             ?>
                         <form action="" method="post">
 
-                            <tr class="baris">
+                            <tr class="baris" id="listGenre">
                                 <th scope="row"><?= $no++ ?></th>
-                                <td>
-                                    <p style="display:none"> <?= $data['genre_nama'] ?></p>
-                                    <input type="text" name="nama" value="<?= $data['genre_nama'] ?>"
-                                        class="form-control"> <input type="hidden" value="<?=$data['genre_id']?>"
-                                        name="id"><?= ($data['genre_id'] == $_POST['id'])? "<p style='color:red;'> $salah  
+                                <td class="initial-input">
+                                    <p> <?= $data['genre_nama'] ?></p>
+                                    <input name="nama" value="<?= $data['genre_nama'] ?>" class="form-control"> <input
+                                        type="hidden" value="<?=$data['genre_id']?>" name="id"><?= ($data['genre_id'] == $_POST['id'])? "<p style='color:red;'> $salah  
                                     </p>" : '' ?>
                                 </td>
                                 <td>
@@ -192,9 +191,50 @@ require_once 'header.php';
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
+
+    // var list = document.getElementById("listGenre");
+    // var genres = list.querySelectorAll("td");
+    var genres = document.getElementsByClassName("initial-input");
+    var inputs = document.querySelectorAll('input[name="nama"]');
+
+    for (var i = 0; i < genres.length; i++) {
+        genres[i].addEventListener("click", editGenre);
+        inputs[i].addEventListener("blur", updateItem);
+    }
+
+    function editGenre() {
+        this.className = "edit";
+        var input = this.querySelector("input");
+        input.focus();
+        input.setSelectionRange(0, input.value.length);
+    }
+
+    function updateItem() {
+        // this.previousElementSibling.innerHTML = this.value;
+        this.parentNode.className = "initial-input";
+    }
     </script>
 
     <style>
+    .initial-input {
+        cursor: pointer;
+        width: 60%;
+    }
+
+    .initial-input input {
+        display: none;
+    }
+
+    td.edit p {
+        display: none;
+
+    }
+
+    td.edit input {
+        display: initial;
+        text-align: center;
+    }
+
     #myBtn {
         width: 3rem;
         height: 3.5rem;
