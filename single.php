@@ -17,9 +17,9 @@
 
     $genres = mysqli_fetch_object($genre);
     $array  = explode(', ', $genres->genres);
-    $array2 = explode(', ', $genres->genres_id);
+    // $array2 = explode(', ', $genres->genres_id);
 
-    $number  = count($array2);
+    $number  = count($array);
 
     if(isset($_POST['komen'])){
         $produk_id = $u->produk_id;
@@ -61,7 +61,7 @@
                         <p class="author-s"><?= $u->produk_penulis ?></p>
                         <span>Genre : <?php for($i = 0; $i < $number; $i++){    ?>
 
-                            <a href="cari_genre.php?genre=<?= $array2[$i] ?>" class="badge bg-primary rounded-pill">
+                            <a href="cari_genre.php?genre=<?= $array[$i] ?>" class="badge bg-primary rounded-pill">
                                 <?= $array[$i]; ?>
                             </a>
 

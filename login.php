@@ -13,8 +13,11 @@
 
         if(login($user, $pass) == true){
             echo '<script>alert("Berhasil Login")</script>';
-            echo '<script>javascript:history.go(-2)</script>';
+            // echo '<script>window.location="index.php"</script>';
+            // echo '<script>javascript:history.go(-2)</script>';
         }else echo '<script>alert("Username atau Password Salah")</script>';
+              echo '<script>window.location="login.php"</script>';
+
         
 
     }

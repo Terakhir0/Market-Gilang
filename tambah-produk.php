@@ -63,6 +63,7 @@
             if($insert){
                 $last  = $conn -> insert_id;
                 $jmlh  = count($genre);
+                sort($genre);
                 for($x = 0 ; $x < $jmlh ; $x++){
                 mysqli_query($conn, "INSERT INTO genre (genreg_id, produkg_id) VALUES ('$genre[$x]', '$last')");
                 }

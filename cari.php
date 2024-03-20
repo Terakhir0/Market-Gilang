@@ -1,27 +1,42 @@
 <?php   
 require_once 'init/init.php';
-error_reporting(0);
+// error_reporting(0);
 $_SESSION['order'] = [];
 
 
 // print_r($genre);
     $cari  = '';    
-    $search = '';    
+    $search = '';
+    $keywords = '';
 
     if(isset($_GET['search'])){
-    $cari = $_GET['search'];    
-    $search = "AND produk_nama LIKE '%$cari%' ";
+    $cari = $_GET['search'];
+    $clean = cleaning($cari);
+
+     if(strpos($clean, "-") > 0){
+        $keywords = explode("-", $clean);
+     }else{
+        $keywords = $clean;
+     }
+
+
+    $search = "AND produk_nama LIKE '%$cari%' OR genre_nama LIKE '%$cari%' ";
+    
+    if(is_array($keywords)){
+        foreach($keywords as $k){
+            $search .= "OR produk_nama LIKE '%$k%'";
+            $search .= "OR genre_nama LIKE '%$k%'";
+        }
+    }
+    
 
     
     }   
 
-  
-    
-
 
     
 
-    var_dump($_SESSION['cari']);
+    // var_dump($_SESSION['cari']);
 
 // echo $ss;
 

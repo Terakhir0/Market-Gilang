@@ -1,26 +1,22 @@
 <?php   
 require_once 'init/init.php';
-include 'auth.php';
+// include 'auth.php';
 
 $_SESSION['order'] = [];
 
 
-$id = $_SESSION['id'];
 
-$produk = mysqli_query($conn, "SELECT * FROM tb_produk INNER JOIN keranjang ON produk_id = produkC_id INNER JOIN user ON user_id=id WHERE id = '$id'");
 
 
 
 
 if(isset($_POST['beli'])){
-    $idp = $_POST['idp'];
-    $jmlh = $_POST['jumlah_beli'];
-    $stk = $_POST['stokp'];
-
-   
-        order($idp, $jmlh, $stk);
-        header('Location:order_all.php');
+    if(isset($_SESSION['login']) != true){
+        echo '<script>alert("Silahkan login terlebih dahulu")</script>';
+        echo '<script>window.location="login.php"</script>';
+    }
     
+
 }
 
 require_once 'header.php';
@@ -59,38 +55,38 @@ require_once 'header.php';
                                 <?php 
                             $no = 1; 
                             $total = 0;
-                            if(mysqli_num_rows($produk) > 0){
-                            while($data = mysqli_fetch_array($produk)):
+                            if(count($_SESSION['cart']) > 0){
+                            foreach($_SESSION['cart'] as $data):
                                 
                                
                             ?>
                                 <th scope="row">
-                                    <input type="hidden" name="idp[]" value="<?= $data['produk_id'] ?>">
+                                    <input type="hidden" name="idp[]" value="<?= $data['idc'] ?>">
                                     <?= $no++ ?>
                                 </th>
-                                <td><img src="gambar-p/<?= $data['produk_gambar'] ?>" alt="" width="50px"></td>
-                                <td><?= $data['produk_nama'] ?></td>
-                                <td>Rp. <?= number_format($data['produk_harga']) ?></td>
+                                <td><img src="gambar-p/<?= $data['gambar'] ?>" alt="" width="50px"></td>
+                                <td><?= $data['nama'] ?></td>
+                                <td>Rp. <?= number_format($data['harga']) ?></td>
                                 <td>
                                     <span class="text-jumlah">
                                         <input type="number" class="form-control"
                                             style="width:5rem; margin-left: 0.5rem; padding-right:3px"
-                                            name="jumlah_beli[]" min="1" max="<?= $data['produk_stok'] ?>" id=""
-                                            value="<?= number_format($data['jumlah'])  ?>" required>
+                                            name="jumlah_beli[]" min="1" max="<?= $data['stok'] ?>" id=""
+                                            value="<?= number_format($data['jumlah']) ?>" required>
 
-                                        <input type="hidden" name="stokp" value="<?= $data['produk_stok'] ?>">
+                                        <input type="hidden" name="stokp" value="<?= $data['stok'] ?>">
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="delete.php?idc=<?=$data['produkC_id']?>" class="btn btn-danger"
+                                    <a href="delete.php?idcgi=<?=$data['idc']?>" class="btn btn-danger"
                                         onclick="return confirm('Anda yakin ingin menghapus produk dari keranjang?')">HAPUS</a>
                                 </td>
                             </tr>
 
                             <?php
-                        $jml = $data['produk_harga'] * $data['jumlah'];
+                        $jml = $data['harga'] * $data['jumlah'];
                         $total += $jml ;
-                        endwhile;} else{ ?>
+                        endforeach;} else{ ?>
                             <tr>
                                 <td colspan="6">Keranjang Masih Kosong</td>
                             </tr>
@@ -98,7 +94,7 @@ require_once 'header.php';
 
                     </tbody>
 
-                    <a style="float:right; margin-bottom:10px" href="delete.php?idca=" class="btn btn-danger"
+                    <a style="float:right; margin-bottom:10px" href="delete.php?idcg" class="btn btn-danger"
                         onclick="return confirm('Anda yakin ingin mereset keranjang?')">Reset</a>
                 </table>
 

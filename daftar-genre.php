@@ -192,25 +192,39 @@ require_once 'header.php';
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
 
-    // var list = document.getElementById("listGenre");
-    // var genres = list.querySelectorAll("td");
-    var genres = document.getElementsByClassName("initial-input");
-    var inputs = document.querySelectorAll('input[name="nama"]');
 
-    for (var i = 0; i < genres.length; i++) {
-        genres[i].addEventListener("click", editGenre);
-        inputs[i].addEventListener("blur", updateItem);
-    }
+    // var genres = document.getElementsByClassName("initial-input");
+    // var inputs = document.querySelectorAll('input[name="nama"]');
+
+    // for (var i = 0; i < genres.length; i++) {
+    //     genres[i].addEventListener("click", editGenre);
+    //     inputs[i].addEventListener("blur", updateItem);
+    // }
+
+    // function editGenre() {
+    //     this.className = "edit";
+    //     var input = this.querySelector("input");
+    //     input.focus();
+    //     input.setSelectionRange(0, input.value.length);
+    // }
+
+    // function updateItem() {
+    //     // this.previousElementSibling.innerHTML = this.value;
+    //     this.parentNode.className = "initial-input";
+    // }
+
+    $('.initial-input').on('click', editGenre);
+    $('input[name=nama]').blur(updateItem);
 
     function editGenre() {
-        this.className = "edit";
-        var input = this.querySelector("input");
+        $(this).addClass('edit');
+        var input = this.querySelector('input');
         input.focus();
         input.setSelectionRange(0, input.value.length);
     }
 
     function updateItem() {
-        // this.previousElementSibling.innerHTML = this.value;
+        // this.previousElementSibling.html()
         this.parentNode.className = "initial-input";
     }
     </script>

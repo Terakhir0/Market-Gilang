@@ -7,8 +7,7 @@ $id = $_SESSION['id'];
 $_SESSION['order'] = [];
 
 
-$penuh = mysqli_query($conn, "SELECT * FROM keranjang WHERE user_id = $id");
-
+print_r($_SESSION['cart']);
 
 if(isset($_POST['beli'])){
     $idp = $_POST['idp'];
@@ -40,21 +39,12 @@ if(isset($_POST['cart'])){
     $id = $_SESSION['id'];
     $jmlh = $_POST['jumlah'];
 
-    $cek = mysqli_query($conn, "SELECT * FROM keranjang WHERE produkC_id = $idc");
-
-    if(mysqli_num_rows($cek) > 0 ){
-        echo '<script>alert("Barang sudah ada di dalam keranjang!")</script>';
-
-
-    } elseif(mysqli_num_rows($penuh) == 10){
-        echo '<script>alert("Keranjang sudah penuh!")</script>';
-
+    if($_SESSION['login'] == true){
+        keranjang($idc, $id, $jmlh);
+    } else {
+        keranjangGuest($idc, $jmlh);
     }
-    else{
-    mysqli_query($conn, "INSERT INTO keranjang (produkC_id, user_id, jumlah) VALUES ('$idc', '$id', $jmlh )");
-    echo '<script>alert("Berhasil Menabah Keranjang")</script>';    
-    header('Location:index.php');
-    }
+    
 }
 
 require_once 'header.php';
@@ -81,7 +71,7 @@ require_once 'header.php';
                                    
 
                             ?>
-                    <a class="item-genres-index" href="cari_genre.php?genre=<?= $data['genre_id'] ?>">
+                    <a class="item-genres-index" href="cari_genre.php?genre=<?= $data['genre_nama'] ?>">
                         <?= $data['genre_nama'] ?>
                     </a>
 
@@ -264,14 +254,14 @@ require_once 'header.php';
 
     for (i = 0; i < all.length; i++) {
         if (all.every.style.display == "none") {
-            alert("KONTOL");
+            alert("test");
         }
     }
 
 
     // for (i = 0; i < li.length; i++) {
     //     if (li[i].style.display == "none") {
-    //         alert("KONTOL")
+    //         alert("test")
     //     } else {
     //         li[i].style.display = "none";
     //     }

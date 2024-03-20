@@ -74,12 +74,15 @@
 
 if(isset($_POST['edit-genre'])){
     $genre   = $_POST['genre'];
-
+    sort($_POST['pgenre']);
+    $genres  = implode(", ", $_POST['pgenre']);
+    
     $jmlh  = count($genre);
     mysqli_query($conn, "DELETE FROM genre WHERE produkg_id = '$idp' ");
     for($x = 0 ; $x < $jmlh ; $x++){
     mysqli_query($conn, "INSERT INTO genre (genreg_id, produkg_id) VALUES ('$genre[$x]', '$idp')");
     }        
+    mysqli_query($conn, "UPDATE tb_produk SET produk_genres = '$genres' WHERE produk_id = '$idp' ");
 }
 
     require_once 'header.php';
@@ -174,7 +177,6 @@ if(isset($_POST['edit-genre'])){
                                         for="flexCheckDefault">
                                         <?= $datas['genre_nama'] ?>
                                     </label>
-
 
                                 </div>
 

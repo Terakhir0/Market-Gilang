@@ -10,6 +10,8 @@
 
 $('#loader').show();
 $('.container').hide();
+// $('.navbar').hide();
+// $('.search').hide();
 $(document).ready(function () {
   // $('#cari').on('keyup', function () {
   //memanggil ajax menggunakan load
@@ -25,4 +27,6 @@ $(document).ready(function () {
 
   $('#loader').hide();
   $('.container').show();
+  // $('.navbar').show();
+  // $('.search').show();
 });

@@ -11,7 +11,10 @@
         $data = mysqli_fetch_object($query);
 
         $count = mysqli_query($conn, "SELECT COUNT(produkC_id) AS isi FROM keranjang WHERE user_id = '$id'");
-        $val = mysqli_fetch_assoc($count);
+        $semua = mysqli_fetch_assoc($count);
+        $val = $semua['isi'];
+    } else {
+        $val = count($_SESSION['cart']);
     }
 
 ?>
@@ -46,11 +49,14 @@
                         <a class="nav-link" aria-current="page" href="index.php">Home</a>
                     </li>
                     <li class="nav-item pe-4">
-                        <?php if(isset($val['isi']) > 0){
+                        <?php if(isset($val) > 0){
                             ?>
-                        <a class="nav-link" href="keranjang.php">Keranjang (<?= $val['isi'] ?>)</a>
+                        <a class="nav-link"
+                            href="<?= ($_SESSION['login'] == true) ? 'keranjang.php' : 'keranjangGuest.php'; ?>">Keranjang
+                            (<?= $val ?>)</a>
                         <?php } else{ ?>
-                        <a class="nav-link" href="keranjang.php">Keranjang</a>
+                        <a class="nav-link"
+                            href="<?= ($_SESSION['login'] == true) ? 'keranjang.php' : 'keranjangGuest.php'; ?>">Keranjang</a>
 
                         <?php } ?>
                     </li>

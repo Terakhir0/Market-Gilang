@@ -1,6 +1,6 @@
 <?php
     require_once 'init/init.php';
-    include 'auth.php';
+    // include 'auth.php';
 
     if(isset($_GET['idp'])){
         $id = $_GET['idp'];
@@ -34,6 +34,30 @@ if(isseT($_GET['idca'])){
     $query = mysqli_query($conn, "DELETE FROM keranjang");
     echo '<script>alert("Behasil mereset dari keranjang!")</script>';
     echo '<script>window.location="keranjang.php"</script>';
+
+}
+
+if(isseT($_GET['idcg'])){
+   
+    $_SESSION['cart'] = [];
+    echo '<script>alert("Behasil mereset dari keranjang!")</script>';
+    echo '<script>window.location="keranjangGuest.php"</script>';
+
+}
+if(isseT($_GET['idcgi'])){
+    $id  = $_GET['idcgi'];
+
+    $cart = $_SESSION['cart'];
+    $k = array_filter($cart, function ($var) use ($id) {
+        return ($var['idc']==$id);
+    });
+
+    foreach($k as $key => $value){
+        unset($_SESSION['cart'][$key]);
+    }
+
+    echo '<script>alert("Behasil dihapus dari keranjang!")</script>';
+    echo '<script>window.location="keranjangGuest.php"</script>';
 
 }
 

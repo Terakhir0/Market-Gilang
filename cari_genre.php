@@ -1,50 +1,52 @@
 <?php   
 require_once 'init/init.php';
-// error_reporting(0);
+error_reporting(0);
 $_SESSION['order'] = [];
 
 
 // print_r($genre);
     $cari  = '';    
     $search = '';    
+    $results = array();
 
 
      if(isset($_GET['genre'])){
-        $cari =  $_GET['genre'];
-        $_SESSION['genre'] = explode(" , ", $cari);
-        $search = "AND genre_id = $cari ";
+        $cari =  explode(" , " , $_GET['genre']);
+        // $_SESSION['genre'] = explode(" , ", $cari);
+        // $search = "AND genre_nama  LIKE '%$cari%' ";
         
     }
  
    
      else if(isset($_GET['genres'])){
         $cari = $_GET['genres'];
-        // foreach($genres as $val){
-        //     echo $val;
+        // // = Not Used
+        // // foreach($genres as $val){
+        // //     echo $val;
 
-        // $genres = implode(', ', $_GET['genres']);
-        
+        // // $genres = implode(', ', $_GET['genres']);
+        // // =  Not Used
 
-        $count = count($cari);
-        for($x = 0; $x < $count; $x++){ 
-        $search = "AND genre_id IN ('$cari[$x]') ";
-        }
+        // $count = count($cari);
+        // for($x = 0; $x < $count; $x++){ 
+        // $search = "AND genre_nama IN ('$cari[$x]') ";
+        // }
      
-        $_SESSION['genre'] = $cari;
+        $_SESSION['genres'] = $cari;
 
     }
     else{
-        $cari = $_SESSION['genre'];
-        $count = count($cari);
-        for($x = 0; $x < $count; $x++){ 
-        $search = "AND genre_id IN ('$cari[$x]') ";
-        }
+        $cari = $_SESSION['genres'];
+        // $count = count($cari);
+        // for($x = 0; $x < $count; $x++){ 
+        // $search = "AND genre_nama IN ('$cariss[$x]') ";
+        // }
 
       
     }
 
 
-    var_dump($cari);
+    // var_dump($search);
 
 // echo $ss;
 
@@ -57,12 +59,55 @@ $perpage = 10;
 
 $start = (current_page() > 1) ? (current_page() * $perpage) - $perpage : 0;
 
+
+
+$dataAll = mysqli_query($conn, "SELECT *, GROUP_CONCAT(genre_nama ORDER BY genre_nama SEPARATOR ' , ') AS genres FROM tb_produk INNER JOIN genre ON produkg_id=produk_id INNER JOIN tb_genre ON genre_id=genreg_id WHERE produk_stok > 0 GROUP BY produk_nama ORDER BY produk_id ASC ");
+
+foreach($dataAll as $p){
+    $array = [ 
+        'id'     => $p['produk_id'],
+        'nama'   => $p['produk_nama'],
+        'gambar' => $p['produk_gambar'],
+        'harga'  => $p['produk_harga'],
+        'stok'   => $p['produk_stok'],
+        'genres' => explode(" , " , $p['genres'])
+        
+      ];
+
+
+  $results[] = $array;
+
+  
+
+}
+
+$getData = multiSearchGenre($results, $cari);
+$convertData = implode(", " , $getData);
+
+// for($i = 0; $i < $count; $i++){
+    $search = "AND produk_id IN ($convertData)";
+// }
+
+// var_dump($count);
+
+
 $page = "SELECT *, GROUP_CONCAT(genre_nama ORDER BY genre_nama SEPARATOR ' , ') AS genres FROM tb_produk INNER JOIN genre ON produkg_id=produk_id INNER JOIN tb_genre ON genre_id=genreg_id WHERE produk_stok > 0 $search GROUP BY produk_nama ORDER BY produk_id ASC ";
 
 
 $produk = data_pagination($page);
 
 $pages = total_data_pagination($page);
+
+
+
+
+// $coba = array("School Life");
+
+
+
+// $anjing = multiSearchGenre($results, $coba);
+// var_dump($anjing);
+
 
 
 
@@ -98,8 +143,8 @@ require_once 'header.php';
                     <div class="form-check edit-genre-form">
 
                         <input class="form-check-input edit-genre" name="genres[]" type="checkbox"
-                            value="<?= $data['genre_id'] ?>"
-                            <?= (in_array($data['genre_id'], $checked) ||  $data['genre_id'] == $check2 )? 'checked' : ''  ?>
+                            value="<?= $data['genre_nama'] ?>"
+                            <?= (in_array($data['genre_nama'], $checked) ||  $data['genre_nama'] == $check2 )? 'checked' : ''  ?>
                             id="flexCheckDefault">
                         <label class="form-check-label edit-genre" for="flexCheckDefault">
                             <?= $data['genre_nama'] ?>
@@ -188,7 +233,7 @@ require_once 'header.php';
             <?php } ?>
         </div>
 
-        <?php                 if(mysqli_num_rows($produk) > 0){
+        <?php  if(mysqli_num_rows($produk) > 0){
  ?>
         <nav aria-label="..." class="pagination-riwayat">
             <ul class="pagination ">
@@ -221,7 +266,7 @@ require_once 'header.php';
             </ul>
         </nav>
 
-        <?php } ?>
+        <?php }?>
     </div>
 </section>
 
