@@ -45,6 +45,31 @@ $_SESSION['order'] = [];
       
     }
 
+    if(isset($_POST['beli'])){
+        $idp = $_POST['idp'];
+        $jmlh = 1;
+        $stk = $_POST['stokp'];
+    
+     
+        if(order($idp, $jmlh, $stk)){
+            header('Location:order_all.php');
+        };
+    
+    }
+
+    if(isset($_POST['cart'])){
+        $idc = $_POST['idc'];
+        // $id = $_SESSION['id'];
+        $jmlh = $_POST['jumlah'];
+    
+        if($_SESSION['login'] == true){
+            keranjang($idc, $id, $jmlh);
+        } else {
+            keranjangGuest($idc, $jmlh);
+        }
+        
+    }
+
 
     // var_dump($search);
 
@@ -219,20 +244,95 @@ require_once 'header.php';
                         <div class="tombol-c">
                             <a>Rp. <?= number_format($data['produk_harga']) ?></a>
 
-                            <a href="order.php?idp=<?= $data['produk_id'] ?>" name="beli" class="btn btn-success btn-c">
-                                BELI</a>
-                            <input type="submit" name="cart" class="btn btn-info btn-c" value="CART">
+                            <button type="button" class="btn btn-success btn-c" data-bs-toggle="modal"
+                                data-bs-target="#order-modal<?= $data['produk_id'] ?>">
+                                Beli
+                            </button>
+                            <button type="button" class="btn btn-info btn-c" data-bs-toggle="modal"
+                                data-bs-target="#cart-modal<?= $data['produk_id'] ?>">
+                                CART
+                            </button>
+
+                            <div class="modal fade" id="order-modal<?= $data['produk_id'] ?>" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Ingin membeli produk?
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="gambar-p/<?= $data['produk_gambar'] ?>" alt=""
+                                                class="modal-gambar">
+                                            <h4 class="modal-judul"><?= $data['produk_nama'] ?></h4>
+                                            <span class="text-jumlah"> Jumlah : <input type="number"
+                                                    class="form-control"
+                                                    style="width:5rem; margin-left: 0.5rem; padding-right:3px"
+                                                    name="jumlah_beli[]" id="" value="1" min="1"
+                                                    max="<?= $data['produk_stok'] ?>" required>
+                                                <input type="hidden" name="stokp" value="<?= $data['produk_stok'] ?>">
+                                            </span>
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="hidden" name="idp[]" value="<?= $data['produk_id'] ?>">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Tidak</button>
+                                            <input type="submit" name="beli" class="btn btn-primary" value="Beli">
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="cart-modal<?= $data['produk_id'] ?>" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Masukkan dalam
+                                                keranjang?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="gambar-p/<?= $data['produk_gambar'] ?>" alt=""
+                                                class="modal-gambar">
+                                            <h4 class="modal-judul"><?= $data['produk_nama'] ?></h4>
+                                            <span class="text-jumlah"> Jumlah : <input type="number"
+                                                    class="form-control"
+                                                    style="width:5rem; margin-left: 0.5rem; padding-right:3px"
+                                                    name="jumlah" id="" value="1" min="1"
+                                                    max="<?= $data['produk_stok'] ?>" required></span>
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Tidak</button>
+                                            <input type="hidden" name="idc" value="<?= $data['produk_id'] ?>">
+                                            <input type="submit" name="cart" class="btn btn-primary"
+                                                data-bs-dismiss="modal" value="Ya">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     </form>
                 </div>
-
             </div>
 
             <?php  endwhile; }  else{ ?>
             <h3 class="text-center" style="margin-left:29rem">Produk yang anda cari tidak ada</h3>
             <?php } ?>
         </div>
-
         <?php  if(mysqli_num_rows($produk) > 0){
  ?>
         <nav aria-label="..." class="pagination-riwayat">

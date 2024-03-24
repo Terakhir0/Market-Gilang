@@ -7,7 +7,7 @@ $id = $_SESSION['id'];
 $_SESSION['order'] = [];
 
 
-print_r($_SESSION['cart']);
+// print_r($_SESSION['cart']);
 
 if(isset($_POST['beli'])){
     $idp = $_POST['idp'];
@@ -36,7 +36,7 @@ $pages = total_data_pagination_index($semuaProduk);
 
 if(isset($_POST['cart'])){
     $idc = $_POST['idc'];
-    $id = $_SESSION['id'];
+    // $id = $_SESSION['id'];
     $jmlh = $_POST['jumlah'];
 
     if($_SESSION['login'] == true){
